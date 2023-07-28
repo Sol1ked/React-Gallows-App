@@ -7,7 +7,7 @@ const Modal = ({children, ...props}) => {
             w-full h-screen w-screen bg-[#000] bg-opacity-40
             flex items-center justify-center">
             <div {...props}
-                 className="min-w-[350px] min-h-[240px] flex p-5 items-center justify-center bg-[#3D4552] rounded">
+                 className="min-w-[350px] text-[#fff] text-center text-xl min-h-[240px] flex p-5 items-center justify-center bg-[#3D4552] rounded">
                 {children}
             </div>
         </div>
