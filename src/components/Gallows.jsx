@@ -4,7 +4,7 @@ const Gallows = ({mistakesCount}) => {
     return (
         <img
             className="min-w-[250px]"
-            src={`src/assets/images/gallows/gallows${mistakesCount}.svg`}
+            src={`src/assets/images/gallows${mistakesCount}.svg`}
             alt="image"
         />
     );
