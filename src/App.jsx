@@ -1,7 +1,10 @@
 import React, {useState, useEffect} from "react";
-import Help from "./components/help/Help.jsx";
-import Modal from "./components/modal/Modal.jsx";
-import Button from "./components/button/Button.jsx";
+import Help from "./components/UI/help/Help.jsx";
+import Modal from "./components/UI/modal/Modal.jsx";
+import Button from "./components/UI/button/Button.jsx";
+import Mistakes from "./components/Mistakes.jsx";
+import WordList from "./components/WordList.jsx";
+import Gallows from "./components/Gallows.jsx";
 
 function App() {
     const [words, setWords] = useState([
@@ -27,7 +30,7 @@ function App() {
 
     const randomIndexGenerate = () => {
         const random = Math.floor(Math.random() * words.length);
-        const word = words[random].word.split('');
+        const word = words[random].word.toLowerCase().split('');
         setRandomWord(word);
     };
 
@@ -38,12 +41,11 @@ function App() {
 
     const checkWinGame = () => {
         const isWordGuessed = randomWord.every((letter) =>
-            guessedLetters.includes(letter.toUpperCase())
+            guessedLetters.includes(letter)
         );
 
         if (isWordGuessed && isStart) {
             setIsWin(true);
-            setIsLose(true);
         }
 
         if (mistakesCount >= 6) {
@@ -73,14 +75,14 @@ function App() {
 
     const handleKeyPress = (e) => {
         if (isStart && !isLose) {
-            const char = e.key.toUpperCase();
+            const char = e.key;
             const russianCharactersPattern = /[а-яА-Я]/;
             if (russianCharactersPattern.test(char)) {
                 const isCurrentLetterGuess = guessedLetters.includes(char);
                 if (isCurrentLetterGuess) {
                     setError(!error);
                 } else {
-                    if (randomWord.map((w) => w.toUpperCase()).includes(char)) {
+                    if (randomWord.map((w) => w).includes(char)) {
                         setGuessedLetters((prevGuessedLetters) => [...prevGuessedLetters, char]);
                     } else {
                         setMistakes([...mistakes, char]);
@@ -99,7 +101,6 @@ function App() {
         };
     }, [isStart, guessedLetters, checkWinGame]);
 
-
     return (
         <div className="bg-[#303642] h-screen w-full">
             <div className="max-w-[1200px] h-screen m-auto p-15 flex flex-col justify-start relative">
@@ -108,49 +109,17 @@ function App() {
                     <p className="text-[#fff] text-xl">Отгадайте фрукт - введите букву</p>
                     <div className="mt-16 flex max-w-[540px] justify-between items-center gap-14">
                         {isStart ? (
-                            <img
-                                className="min-w-[250px]"
-                                src={`src/assets/images/gallows/gallows${mistakesCount}.svg`}
-                                alt="image"
-                            />
+                            <Gallows mistakesCount={mistakesCount}/>
                         ) : (
-                            <Button onClick={handleStart}>Start</Button>
+                            <Button onClick={handleStart}>Начать игру</Button>
                         )}
-                        <div className="mr-16 flex gap-2">
-                            {randomWord &&
-                                randomWord.map((l, index) => (
-                                    <div
-                                        key={index}
-                                        className="
-                                          border-b-4 border-b-[#FF7461]
-                                          inline-flex items-center justify-center
-                                          h-[50px] w-[20px] text-3xl
-                                          text-[#fff] p-1"
-                                    >
-                                        {guessedLetters.includes(l.toUpperCase()) ? l.toUpperCase() : ''}
-                                    </div>
-                                ))}
-                        </div>
-                        <div className="min-w-[200px]">
-                            {mistakes.length > 0 && (
-                                <div className="flex flex-col gap-4 text-[#fff] text-xl">
-                                    <p> Ошибок сделано: {mistakesCount - 1}</p>
-                                    <div className="flex">
-                                        <p className="mr-2">Ошибки:</p>
-                                        {mistakes.map((m, index) => (
-                                            <p key={index} className="mr-1">
-                                                {m}
-                                            </p>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+                        <WordList randomWord={randomWord} guessedLetters={guessedLetters}/>
+                        <Mistakes mistakesCount={mistakesCount} mistakes={mistakes}/>
                     </div>
                     {isWin && isStart && (
                         <Modal>
                             <div className="flex flex-col gap-3">
-                                <p>Вы выиграли</p>
+                                <p>Вы выиграли!!!</p>
                                 <p>Ошибок сделано: {mistakesCount - 1}</p>
                                 <Button onClick={handleRestart}>Начать заново</Button>
                             </div>
