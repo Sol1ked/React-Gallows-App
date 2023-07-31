@@ -6,7 +6,7 @@ const Mistakes = ({mistakes, mistakesCount}) => {
         <div className="min-w-[200px]">
             {mistakes.length > 0 && (
                 <div className="flex flex-col gap-4 text-[#fff] text-xl">
-                    <p>Ошибок сделано: {mistakesCount - 1}</p>
+                    <p>Ошибок сделано: {mistakesCount}</p>
                     <div className="flex">
                         <p className="mr-2">Ошибки:</p>
                         {mistakes.map((m, index) => (

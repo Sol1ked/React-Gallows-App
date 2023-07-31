@@ -8,25 +8,26 @@ import Gallows from "./components/Gallows.jsx";
 
 function App() {
     const [words, setWords] = useState([
-        {id: 1, word: 'Арбуз'},
-        {id: 2, word: 'Банан'},
-        {id: 3, word: 'Апельсин'},
-        {id: 4, word: 'Кокос'},
+        // {id: 1, word: 'Арбуз'},
+        // {id: 2, word: 'Банан'},
+        // {id: 3, word: 'Апельсин'},
+        // {id: 4, word: 'Кокос'},
         {id: 5, word: 'Манго'},
-        {id: 6, word: 'Авокадо'},
-        {id: 7, word: 'Яблоко'},
-        {id: 8, word: 'Персик'},
-        {id: 9, word: 'Виноград'},
-        {id: 10, word: 'Мандарин'},
+        // {id: 6, word: 'Авокадо'},
+        // {id: 7, word: 'Яблоко'},
+        // {id: 8, word: 'Персик'},
+        // {id: 9, word: 'Виноград'},
+        // {id: 10, word: 'Мандарин'},
     ]);
     const [randomWord, setRandomWord] = useState([]);
     const [isStart, setIsStart] = useState(false);
     const [guessedLetters, setGuessedLetters] = useState([]);
     const [error, setError] = useState(false);
     const [mistakes, setMistakes] = useState([]);
-    const [mistakesCount, setMistakesCount] = useState(1);
+    const [mistakesCount, setMistakesCount] = useState(0);
     const [isWin, setIsWin] = useState(false);
     const [isLose, setIsLose] = useState(false);
+    const [maxMistakes] = useState(5);
 
     const randomIndexGenerate = () => {
         const random = Math.floor(Math.random() * words.length);
@@ -48,9 +49,6 @@ function App() {
             setIsWin(true);
         }
 
-        if (mistakesCount >= 6) {
-            setIsLose(true);
-        }
     };
 
     useEffect(() => {
@@ -60,6 +58,7 @@ function App() {
     const handleStart = () => {
         demoStart();
         setIsStart(true);
+        document.body.addEventListener('keydown', handleKeyPress);
     };
 
     const handleRestart = () => {
@@ -69,28 +68,36 @@ function App() {
         setIsLose(false);
         setIsWin(false);
         setMistakes([]);
-        setMistakesCount(1);
+        setMistakesCount(0);
         setIsStart(true);
+        document.body.addEventListener('keydown', handleKeyPress);
     };
-
     const handleKeyPress = (e) => {
         if (isStart && !isLose) {
             const char = e.key;
             const russianCharactersPattern = /[а-яА-Я]/;
             if (russianCharactersPattern.test(char)) {
                 const isCurrentLetterGuess = guessedLetters.includes(char);
-                if (isCurrentLetterGuess) {
-                    setError(!error);
+                const isCurrentLetterMistakes = mistakes.includes(char);
+                if (isCurrentLetterGuess || isCurrentLetterMistakes) {
+                    setError(true);
                 } else {
                     if (randomWord.map((w) => w).includes(char)) {
                         setGuessedLetters((prevGuessedLetters) => [...prevGuessedLetters, char]);
                     } else {
-                        setMistakes([...mistakes, char]);
-                        setMistakesCount(mistakesCount + 1);
+                        setMistakes((prevMistakes) => [...prevMistakes, char]);
+                        setMistakesCount(prevCount => prevCount + 1);
+                        if (mistakesCount === maxMistakes) {
+                            setIsLose(true);
+                        }
+                        setError(false);
                     }
                 }
-                checkWinGame();
+                checkWinGame()
             }
+        }
+        if (isWin || isLose) {
+            document.body.removeEventListener('keydown', handleKeyPress);
         }
     };
 
@@ -120,7 +127,7 @@ function App() {
                         <Modal>
                             <div className="flex flex-col gap-3">
                                 <p>Вы выиграли!!!</p>
-                                <p>Ошибок сделано: {mistakesCount - 1}</p>
+                                <p>Ошибок сделано: {mistakesCount}</p>
                                 <Button onClick={handleRestart}>Начать заново</Button>
                             </div>
                         </Modal>
@@ -129,7 +136,7 @@ function App() {
                         <Modal>
                             <div className="flex flex-col gap-3">
                                 <p>Вы проиграли((</p>
-                                <p>Ошибок сделано: {mistakesCount - 1}</p>
+                                <p>Ошибок сделано: {mistakesCount}</p>
                                 <Button onClick={handleRestart}>Начать заново</Button>
                             </div>
                         </Modal>
