@@ -8,16 +8,16 @@ import Gallows from "./components/Gallows.jsx";
 
 function App() {
     const [words, setWords] = useState([
-        // {id: 1, word: 'Арбуз'},
-        // {id: 2, word: 'Банан'},
-        // {id: 3, word: 'Апельсин'},
-        // {id: 4, word: 'Кокос'},
+        {id: 1, word: 'Арбуз'},
+        {id: 2, word: 'Банан'},
+        {id: 3, word: 'Апельсин'},
+        {id: 4, word: 'Кокос'},
         {id: 5, word: 'Манго'},
-        // {id: 6, word: 'Авокадо'},
-        // {id: 7, word: 'Яблоко'},
-        // {id: 8, word: 'Персик'},
-        // {id: 9, word: 'Виноград'},
-        // {id: 10, word: 'Мандарин'},
+        {id: 6, word: 'Авокадо'},
+        {id: 7, word: 'Яблоко'},
+        {id: 8, word: 'Персик'},
+        {id: 9, word: 'Виноград'},
+        {id: 10, word: 'Мандарин'},
     ]);
     const [randomWord, setRandomWord] = useState([]);
     const [isStart, setIsStart] = useState(false);
